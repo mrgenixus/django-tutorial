@@ -10,7 +10,10 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import sys
 import dj_database_url
+
+TESTING = 'test' in sys.argv
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,7 +24,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environment.get(SECRET_KEY, "unmtr^m1xnmrj58qv=xs17$-k&qf==+=8*sb(db!eyfjl=&ipx")
+SECRET_KEY = os.environ.get('SECRET_KEY', "unmtr^m1xnmrj58qv=xs17$-k&qf==+=8*sb(db!eyfjl=&ipx")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -87,7 +90,7 @@ DATABASES = {
         'CONN_MAX_AGE': 500,
     }
 }
-if DEBUG == True
+if DEBUG == True:
     AUTH_PASSWORD_VALIDATORS = [
         {
             'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -135,4 +138,5 @@ STATICFILES_DIRS = [
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if not TESTING:
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
